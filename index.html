@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14110f">
+  <meta name="description" content="Links oficiais da Posicionados">
+  <title>Posicionados | HazeLink</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+    :root {
+      --espresso: #14100d;
+      --ink: #1f1814;
+      --coffee: #35241c;
+      --terracotta: #8b563b;
+      --sand: #c79a76;
+      --paper: #f4efe6;
+      --soft: rgba(244, 239, 230, .72);
+      font-family: "Open Sans", system-ui, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--espresso);
+      color: var(--paper);
+      font-family: "Open Sans", system-ui, sans-serif;
+      letter-spacing: 0;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: none;
+    }
+
+    .video-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      background: var(--espresso);
+    }
+
+    .video-layer video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(.92) contrast(1.02) brightness(.96);
+    }
+
+    .video-layer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 24% 12%, rgba(199, 154, 118, .13), transparent 18rem),
+        linear-gradient(to bottom, rgba(20, 16, 13, .06), rgba(20, 16, 13, .34));
+      mix-blend-mode: multiply;
+    }
+
+    .video-layer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+      height: 260px;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(10, 8, 7, .76), transparent);
+    }
+
+    .brand-lockup {
+      position: fixed;
+      left: 18px;
+      top: calc(18px + env(safe-area-inset-top, 0px));
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: calc(100% - 108px);
+      color: var(--paper);
+      text-shadow: 0 2px 16px rgba(0, 0, 0, .42);
+    }
+
+    .mark {
+      width: 54px;
+      height: 54px;
+      flex: 0 0 54px;
+      border-radius: 0;
+      border: 0;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      box-shadow: none;
+      overflow: visible;
+    }
+    .mark img {
+      width: 118%;
+      height: 118%;
+      object-fit: contain;
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .35));
+    }
+
+    .brand-name {
+      margin: 0;
+      color: var(--paper);
+      font-size: clamp(22px, 7.2vw, 32px);
+      line-height: .95;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, .38);
+    }
+
+    .brand-subtitle {
+      margin-top: 4px;
+      color: rgba(244, 239, 230, .88);
+      font-size: 11px;
+      line-height: 1.25;
+      font-weight: 700;
+    }
+
+    .sound-btn {
+      position: fixed;
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      right: 16px;
+      z-index: 12;
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(244, 239, 230, .22);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--paper);
+      background: rgba(20, 16, 13, .68);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .sound-btn:active {
+      transform: scale(.94);
+    }
+
+    .sound-btn.sound-on {
+      color: #17120f;
+      background: var(--sand);
+    }
+
+    .swipe-hint {
+      position: fixed;
+      left: 50%;
+      bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+      z-index: 10;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      color: var(--paper);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-align: center;
+      pointer-events: none;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .55);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .swipe-hint.hidden {
+      opacity: 0;
+      transform: translate(-50%, 12px);
+    }
+
+    .swipe-circle {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #17120f;
+      background: var(--sand);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, .28);
+      animation: floatArrow 1.55s ease-in-out infinite;
+    }
+
+    @keyframes floatArrow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .card-panel {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      max-height: 92vh;
+      overflow-y: auto;
+      color: var(--paper);
+      border-radius: 28px 28px 0 0;
+      border: 1px solid rgba(244, 239, 230, .14);
+      border-bottom: 0;
+      background:
+        radial-gradient(circle at 86% 0%, rgba(199, 154, 118, .13), transparent 12rem),
+        linear-gradient(160deg, rgba(31, 25, 21, .96), rgba(17, 13, 11, .98));
+      box-shadow: 0 -22px 70px rgba(0, 0, 0, .42);
+      transform: translateY(100%);
+      transition: transform .42s cubic-bezier(.4, 0, .2, 1);
+      will-change: transform;
+      -webkit-overflow-scrolling: touch;
+      backdrop-filter: blur(18px);
+    }
+
+    .card-panel.open {
+      transform: translateY(0);
+    }
+
+    .card-panel.no-anim {
+      transition: none;
+    }
+
+    .card-handle {
+      width: 42px;
+      height: 5px;
+      border-radius: 999px;
+      margin: 13px auto 0;
+      background: rgba(244, 239, 230, .22);
+      cursor: pointer;
+    }
+
+    .card-body {
+      width: min(440px, 100%);
+      margin: 0 auto;
+      padding: 18px 22px calc(42px + env(safe-area-inset-bottom, 0px));
+      display: grid;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .panel-logo {
+      width: 82px;
+      height: 82px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      overflow: visible;
+    }
+    .panel-logo img {
+      width: 112%;
+      height: 112%;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 12px rgba(0, 0, 0, .35));
+    }
+
+    .biz-name {
+      margin: 0;
+      color: var(--paper);
+      font-size: 27px;
+      line-height: 1;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-shadow: none;
+    }
+
+    .biz-tagline {
+      max-width: 312px;
+      margin: 9px 0 20px;
+      color: rgba(244, 239, 230, .84);
+      font-size: 14px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      margin-bottom: 20px;
+      background: rgba(244, 239, 230, .12);
+    }
+
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .social-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--paper);
+      border: 1px solid rgba(244, 239, 230, .14);
+      background: rgba(244, 239, 230, .07);
+      text-decoration: none;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .social-btn:active {
+      transform: scale(.92);
+      background: rgba(199, 154, 118, .18);
+    }
+
+    .actions {
+      width: 100%;
+      display: grid;
+      gap: 12px;
+    }
+
+    .action-btn {
+      min-height: 66px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 14px 15px;
+      border-radius: 18px;
+      color: var(--paper);
+      text-decoration: none;
+      border: 1px solid rgba(244, 239, 230, .16);
+      background: rgba(244, 239, 230, .07);
+      box-shadow: inset 0 1px 0 rgba(244, 239, 230, .08), 0 12px 26px rgba(0, 0, 0, .12);
+      transition: transform .15s ease, filter .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .action-btn:active {
+      transform: scale(.97);
+      filter: brightness(.94);
+    }
+
+    .action-btn.instagram {
+      background: rgba(244, 239, 230, .92);
+      color: #18130f;
+      border-color: rgba(244, 239, 230, .5);
+    }
+
+    .action-btn.whatsapp {
+      background: rgba(124, 75, 53, .92);
+      border-color: rgba(199, 154, 118, .3);
+    }
+
+    .action-btn.store {
+      background: rgba(36, 28, 23, .94);
+      border-color: rgba(199, 154, 118, .34);
+    }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: inherit;
+      background: rgba(244, 239, 230, .16);
+      box-shadow: inset 0 1px 0 rgba(244, 239, 230, .12);
+    }
+
+    .action-copy {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+      text-align: left;
+    }
+
+    .action-copy strong {
+      font-size: 16px;
+      font-weight: 800;
+      color: inherit;
+    }
+
+    .action-copy span {
+      font-size: 12px;
+      line-height: 1.34;
+      font-weight: 700;
+      color: rgba(244, 239, 230, .88);
+    }
+
+    .action-btn.instagram .action-copy span {
+      color: rgba(24, 19, 15, .76);
+    }
+
+    .action-btn.instagram .action-icon {
+      background: rgba(24, 19, 15, .08);
+    }
+
+    .action-btn.store .action-copy span {
+      color: rgba(244, 239, 230, .78);
+    }
+
+    .footer {
+      margin-top: 22px;
+      color: rgba(244, 239, 230, .46);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    @media (min-width: 760px) {
+      .brand-lockup {
+        left: 30px;
+        top: 28px;
+      }
+
+      .sound-btn {
+        right: 28px;
+        top: 28px;
+      }
+
+      .card-panel {
+        left: 50%;
+        right: auto;
+        width: min(520px, calc(100% - 36px));
+        transform: translate(-50%, 100%);
+        border-radius: 28px 28px 0 0;
+      }
+
+      .card-panel.open {
+        transform: translate(-50%, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="video-layer" aria-hidden="true">
+    <video id="bgVideo" autoplay muted loop playsinline preload="auto">
+      <source src="./assets/posicionados.cc.mp4" type="video/mp4">
+      <source src="./assets/posicionados.cc.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <header class="brand-lockup" aria-label="Posicionados">
+    <div class="mark" aria-hidden="true">
+      <img src="assets/logo-posicionados.png" alt="">
+    </div>
+    <div>
+      <h1 class="brand-name">Posicionados</h1>
+      <p class="brand-subtitle">Creative Collective</p>
+    </div>
+  </header>
+
+  <button class="sound-btn" id="soundBtn" type="button" aria-label="Ativar som">
+    <svg id="soundIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M16 9.5c.8.7 1.2 1.5 1.2 2.5s-.4 1.8-1.2 2.5"></path>
+      <path d="M19 7c1.5 1.4 2.3 3.1 2.3 5s-.8 3.6-2.3 5"></path>
+    </svg>
+  </button>
+
+  <div class="swipe-hint" id="swipeHint">
+    <div class="swipe-circle" aria-hidden="true">
+      <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </div>
+    <span>Arraste para cima</span>
+  </div>
+
+  <section class="card-panel" id="cardPanel" aria-label="Links da Posicionados">
+    <div class="card-handle" id="cardHandle"></div>
+    <div class="card-body">
+      <div class="panel-logo" aria-hidden="true">
+        <img src="assets/logo-posicionados.png" alt="">
+      </div>
+
+      <h2 class="biz-name">Posicionados</h2>
+      <p class="biz-tagline">Peças, presença e identidade para quem veste posicionamento</p>
+      <div class="divider"></div>
+
+      <div class="socials" aria-label="Redes sociais">
+        <a class="social-btn" href="https://www.instagram.com/posicionados.cc/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+        <a class="social-btn" href="https://wa.me/5581985512123?text=Ol%C3%A1%2C%20vi%20o%20HazeLink%20da%20Posicionados%20e%20quero%20saber%20mais" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97c-.27-.1-.47-.15-.67.15c-.2.3-.77.97-.94 1.16c-.17.2-.35.22-.64.08c-.3-.15-1.26-.46-2.39-1.48c-.88-.79-1.48-1.76-1.65-2.06c-.17-.3-.02-.46.13-.61c.13-.13.3-.35.45-.52c.15-.17.2-.3.3-.5c.1-.2.05-.37-.03-.52c-.07-.15-.67-1.61-.92-2.21c-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37c-.27.3-1.04 1.02-1.04 2.48c0 1.46 1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49c.71.31 1.26.49 1.69.63c.71.23 1.36.2 1.87.12c.57-.09 1.76-.72 2.01-1.41c.25-.69.25-1.29.17-1.41c-.07-.12-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21l-3.74.98l1-3.65l-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.89-9.88c2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 0 1 2.89 6.99c0 5.45-4.44 9.88-9.88 9.88M20.46 3.49A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.31-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.34 11.89-11.89c0-3.18-1.24-6.16-3.49-8.42"></path>
+          </svg>
+        </a>
+      </div>
+
+      <div class="actions">
+        <a class="action-btn instagram" href="https://www.instagram.com/posicionados.cc/" target="_blank" rel="noopener">
+          <span class="action-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+            </svg>
+          </span>
+          <span class="action-copy">
+            <strong>Instagram</strong>
+            <span>Editorial, coleção e presença no feed</span>
+          </span>
+        </a>
+
+        <a class="action-btn whatsapp" href="https://wa.me/5581985512123?text=Ol%C3%A1%2C%20vi%20o%20HazeLink%20da%20Posicionados%20e%20quero%20saber%20mais" target="_blank" rel="noopener">
+          <span class="action-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97c-.27-.1-.47-.15-.67.15c-.2.3-.77.97-.94 1.16c-.17.2-.35.22-.64.08c-.3-.15-1.26-.46-2.39-1.48c-.88-.79-1.48-1.76-1.65-2.06c-.17-.3-.02-.46.13-.61c.13-.13.3-.35.45-.52c.15-.17.2-.3.3-.5c.1-.2.05-.37-.03-.52c-.07-.15-.67-1.61-.92-2.21c-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37c-.27.3-1.04 1.02-1.04 2.48c0 1.46 1.07 2.88 1.21 3.07c.15.2 2.1 3.2 5.08 4.49c.71.31 1.26.49 1.69.63c.71.23 1.36.2 1.87.12c.57-.09 1.76-.72 2.01-1.41c.25-.69.25-1.29.17-1.41c-.07-.12-.27-.2-.57-.35"></path>
+            </svg>
+          </span>
+          <span class="action-copy">
+            <strong>WhatsApp</strong>
+            <span>Fale para comprar ou tirar sua dúvida</span>
+          </span>
+        </a>
+
+        <a class="action-btn store" href="https://wa.me/5581985512123?text=Ol%C3%A1%2C%20vi%20o%20HazeLink%20da%20Posicionados%20e%20quero%20ver%20o%20cat%C3%A1logo" target="_blank" rel="noopener">
+          <span class="action-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6Z"></path>
+              <path d="M3 6h18"></path>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+          </span>
+          <span class="action-copy">
+            <strong>Catálogo</strong>
+            <span>Veja peças e disponibilidade</span>
+          </span>
+        </a>
+      </div>
+
+      <p class="footer">Feito com HazeLink para Posicionados</p>
+    </div>
+  </section>
+
+  <script>
+    const panel = document.getElementById("cardPanel");
+    const hint = document.getElementById("swipeHint");
+    const handle = document.getElementById("cardHandle");
+    const video = document.getElementById("bgVideo");
+    const soundBtn = document.getElementById("soundBtn");
+    const soundIcon = document.getElementById("soundIcon");
+
+    let startY = 0;
+    let lastY = 0;
+    let dragging = false;
+    let isOpen = false;
+    let soundEnabled = false;
+    const rawVideoSrc = "./assets/posicionados.cc.mp4";
+
+    const soundOffSvg = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="22" y1="9" x2="16" y2="15"></line><line x1="16" y1="9" x2="22" y2="15"></line>';
+    const soundOnSvg = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M16 9.5c.8.7 1.2 1.5 1.2 2.5s-.4 1.8-1.2 2.5"></path><path d="M19 7c1.5 1.4 2.3 3.1 2.3 5s-.8 3.6-2.3 5"></path>';
+
+    function setSoundState(enabled) {
+      soundEnabled = enabled;
+      video.muted = !enabled;
+      soundBtn.classList.toggle("sound-on", enabled);
+      soundBtn.setAttribute("aria-label", enabled ? "Desativar som" : "Ativar som");
+      soundIcon.innerHTML = enabled ? soundOnSvg : soundOffSvg;
+    }
+
+    async function playVideo() {
+      try {
+        await video.play();
+        setSoundState(!video.muted);
+      } catch (error) {
+        video.muted = true;
+        setSoundState(false);
+        try { await video.play(); } catch (silentError) {}
+      }
+    }
+
+    function useRawVideoFallback() {
+      if (video.dataset.fallback === "raw") return;
+      video.dataset.fallback = "raw";
+      video.src = rawVideoSrc;
+      video.load();
+      playVideo();
+    }
+
+    async function enableSound() {
+      setSoundState(true);
+      await playVideo();
+    }
+
+    function openPanel() {
+      isOpen = true;
+      panel.classList.remove("no-anim");
+      panel.classList.add("open");
+      panel.style.transform = "";
+      hint.classList.add("hidden");
+    }
+
+    function closePanel() {
+      isOpen = false;
+      panel.classList.remove("no-anim");
+      panel.classList.remove("open");
+      panel.style.transform = "";
+      hint.classList.remove("hidden");
+    }
+
+    function snapBack() {
+      panel.classList.remove("no-anim");
+      panel.style.transform = "";
+      isOpen ? panel.classList.add("open") : panel.classList.remove("open");
+    }
+
+    function onStart(y, target) {
+      if (target && target.closest("a, button")) return;
+      startY = y;
+      lastY = y;
+      dragging = true;
+      if (!soundEnabled) enableSound();
+    }
+
+    function onMove(y) {
+      if (!dragging) return;
+      lastY = y;
+      const diff = startY - lastY;
+      panel.classList.add("no-anim");
+
+      if (!isOpen && diff > 5) {
+        const progress = Math.min(diff / 230, 1);
+        const base = (1 - progress) * 100;
+        panel.style.transform = window.innerWidth >= 760 ? `translate(-50%, ${base}%)` : `translateY(${base}%)`;
+      }
+
+      if (isOpen && diff < -5) {
+        const down = Math.max(0, -diff);
+        panel.style.transform = window.innerWidth >= 760 ? `translate(-50%, ${down}px)` : `translateY(${down}px)`;
+      }
+    }
+
+    function onEnd() {
+      if (!dragging) return;
+      dragging = false;
+      const diff = startY - lastY;
+
+      if (!isOpen && diff > 70) openPanel();
+      else if (isOpen && diff < -70) closePanel();
+      else snapBack();
+    }
+
+    setSoundState(false);
+    video.muted = true;
+    playVideo();
+
+    video.addEventListener("error", useRawVideoFallback);
+    setTimeout(() => {
+      if (!video.readyState || video.videoWidth === 0) useRawVideoFallback();
+    }, 2600);
+
+    soundBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setSoundState(!soundEnabled);
+      await playVideo();
+    });
+
+    soundBtn.addEventListener("touchstart", (event) => event.stopPropagation(), { passive: true });
+    soundBtn.addEventListener("mousedown", (event) => event.stopPropagation());
+
+    handle.addEventListener("click", () => isOpen ? closePanel() : openPanel());
+
+    document.addEventListener("touchstart", (event) => onStart(event.touches[0].clientY, event.target), { passive: true });
+    document.addEventListener("touchmove", (event) => { event.preventDefault(); onMove(event.touches[0].clientY); }, { passive: false });
+    document.addEventListener("touchend", onEnd);
+
+    document.addEventListener("mousedown", (event) => onStart(event.clientY, event.target));
+    document.addEventListener("mousemove", (event) => { if (dragging) onMove(event.clientY); });
+    document.addEventListener("mouseup", onEnd);
+    document.addEventListener("mouseleave", onEnd);
+  </script>
+</body>
+</html>
+
